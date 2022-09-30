@@ -2,9 +2,11 @@ version: "3.9"
 
 networks:
   hiddn-lb-default-network:
+  hiddn-keycloak-default-network:
 
 volumes:
-  hiddn-lb-default-volume: {}
+  hiddn-lb-default-volume:
+  hiddn-keycloak-default-volume:
   
 services:
   kong-database:
@@ -15,7 +17,7 @@ services:
     networks:
       - hiddn-lb-default-network
     ports:
-      - "5432:5432"
+      - "15432:5432"
     environment:
       POSTGRES_DB: hiddn-lb-database
       POSTGRES_USER: hiddn-database
@@ -56,3 +58,43 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
+
+  keycloak-database:
+    image: postgres:9.6
+    restart: on-failure
+    volumes:
+      - hiddn-keycloak-default-volume:/var/lib/postgresql/data
+    networks:
+      - hiddn-keycloak-default-network
+    ports:
+      - "25432:5432"
+    environment:
+      POSTGRES_DB: hiddn-keycloak-database
+      POSTGRES_USER: hiddn-auth-database
+      POSTGRES_PASSWORD: hiddn-keycloak-localhost-pwd
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 45s
+      timeout: 30s
+      retries: 3
+
+  keycloak:
+    image: jboss/keycloak:4.5.0.Final
+    depends_on:
+      - keycloak-database
+    networks:
+      - hiddn-keycloak-default-network
+    ports:
+      - "8180:8080"
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keycloak-database
+      DB_PORT: 5432
+      DB_DATABASE: hiddn-keycloak-database
+      DB_USER: hiddn-auth-database
+      DB_PASSWORD: hiddn-keycloak-localhost-pwd
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+
+    
+
