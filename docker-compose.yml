@@ -79,19 +79,18 @@ services:
       retries: 3
 
   keycloak:
-    image: jboss/keycloak:4.5.0.Final
+    image: quay.io/keycloak/keycloak:legacy
     depends_on:
       - keycloak-database
     networks:
       - hiddn-keycloak-default-network
     ports:
-      - "8180:8080"
+      - "8080:8080"
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: keycloak-database
-      DB_PORT: 5432
       DB_DATABASE: hiddn-keycloak-database
       DB_USER: hiddn-auth-database
       DB_PASSWORD: hiddn-keycloak-localhost-pwd
       KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
