@@ -95,6 +95,3 @@ services:
       DB_PASSWORD: hiddn-keycloak-localhost-pwd
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
-
-    
-
