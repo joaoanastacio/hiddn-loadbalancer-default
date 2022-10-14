@@ -22,11 +22,6 @@ services:
       POSTGRES_DB: hiddn-lb-database
       POSTGRES_USER: hiddn-database
       POSTGRES_PASSWORD: hiddn-lb-localhost-pwd
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "kong"]
-      interval: 45s
-      timeout: 30s
-      retries: 3
 
   kong:
     image: hiddn-lb-default-oidc
@@ -53,11 +48,6 @@ services:
       KONG_PROXY_LISTEN: 0.0.0.0:8000, 0.0.0.0:8443 ssl
       KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
       KONG_PLUGINS: oidc 
-    healthcheck:
-      test: ["CMD", "kong", "health"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
 
   keycloak-database:
     image: postgres:9.6
@@ -72,11 +62,6 @@ services:
       POSTGRES_DB: hiddn-keycloak-database
       POSTGRES_USER: hiddn-auth-database
       POSTGRES_PASSWORD: hiddn-keycloak-localhost-pwd
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "kong"]
-      interval: 45s
-      timeout: 30s
-      retries: 3
 
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
