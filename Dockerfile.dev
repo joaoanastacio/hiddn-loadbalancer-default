@@ -4,6 +4,14 @@ LABEL DOCKERFILE_DESCRIPTION = "CentOS 7 + Kong 2.7 using Kong OIDC plugin (Luar
 
 USER root
 
+EXPOSE 8000
+EXPOSE 8001
+EXPOSE 8080
+EXPOSE 8443
+EXPOSE 8444
+EXPOSE 15432
+EXPOSE 25432
+
 RUN yum install sudo -y git unzip && yum clean all
 
 RUN luarocks install kong-oidc
